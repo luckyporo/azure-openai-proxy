@@ -9,9 +9,9 @@ const mapper = {
 
 const apiVersion="2023-03-15-preview"
 
-addEventListener("fetch", (event) => {
-  event.respondWith(handleRequest(event.request));
-});
+// addEventListener("fetch", (event) => {
+//   event.respondWith(handleRequest(event.request));
+// });
 
 export default async function handleRequest(request: any) {
   if (request.method === 'OPTIONS') {
