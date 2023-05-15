@@ -13,7 +13,7 @@ addEventListener("fetch", (event) => {
   event.respondWith(handleRequest(event.request));
 });
 
-export default async function handleRequest(request) {
+export default async function handleRequest(request: any) {
   if (request.method === 'OPTIONS') {
     return handleOPTIONS(request)
   }
@@ -34,8 +34,8 @@ export default async function handleRequest(request) {
     body = await request.json();
   }
 
-  const modelName = body?.model;  
-  const deployName = mapper[modelName] || '' 
+  const modelName: keyof typeof mapper = body?.model;  
+  const deployName: string = mapper[modelName] || '' 
 
   if (deployName === '') {
     return new Response('Missing model mapper', {
@@ -67,17 +67,17 @@ export default async function handleRequest(request) {
   } 
 
   let { readable, writable } = new TransformStream()
-  stream(response.body, writable);
+  stream(response.body as ReadableStream, writable);
   return new Response(readable, response);
 
 }
 
-function sleep(ms) {
+function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 // support printer mode and add newline
-async function stream(readable, writable) {
+async function stream(readable: ReadableStream, writable: WritableStream) {
   const reader = readable.getReader();
   const writer = writable.getWriter();
 
@@ -114,8 +114,10 @@ async function stream(readable, writable) {
   await writer.close();
 }
 
-async function handleModels(request) {
-  const data = {
+async function handleModels(request: any) {
+  const data: {
+    [key: string]: any
+  } = {
     "object": "list",
     "data": []  
   };
@@ -151,7 +153,7 @@ async function handleModels(request) {
   });
 }
 
-async function handleOPTIONS(request) {
+async function handleOPTIONS(request: any) {
     return new Response(null, {
       headers: {
         'Access-Control-Allow-Origin': '*',
